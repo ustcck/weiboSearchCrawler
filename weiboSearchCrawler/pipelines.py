@@ -14,7 +14,7 @@ class MongoDBPipeline(object):
         self.cnx = pymongo.MongoClient(**settings.get('MONGO_CONFIG'))
         db = self.cnx.admin
         db.authenticate("udms", "123456")
-        self.coll = self.cnx.Doctopus.WeiboCluster
+        self.coll = self.cnx.Doctopus.WeiboNew
 
     def process_item(self, item, spider):
 

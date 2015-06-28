@@ -2,13 +2,13 @@ import marshal
 from scrapy.utils.reqser import request_to_dict, request_from_dict
 
 class SpiderQueue(object):
-    """Per-spider queue abstraction on top of scrapy-redis using sorted set"""
+    """Per-spider queue abstraction on top of scrapy_redis using sorted set"""
 
     def __init__(self, server, spider, key):
-        """Initialize per-spider scrapy-redis queue
+        """Initialize per-spider scrapy_redis queue
 
         Parameters:
-            server -- scrapy-redis connection
+            server -- scrapy_redis connection
             spider -- spider instance
             key -- key for this queue (e.g. "%(spider)s:queue")
 

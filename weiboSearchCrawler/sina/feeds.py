@@ -33,6 +33,7 @@ class SearchPage():
 
     @staticmethod
     def wrap(morePageNode):
+        if morePageNode == None: return []
         values = []
         for linkNode in morePageNode.find_all('a'):
             morelink = linkNode.get('href')

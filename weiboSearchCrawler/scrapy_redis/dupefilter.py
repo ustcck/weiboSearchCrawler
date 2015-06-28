@@ -13,7 +13,7 @@ class RFPDupeFilter(BaseDupeFilter):
 
         Parameters:
             server -- Redis connection
-            key -- scrapy-redis key to store fingerprints
+            key -- scrapy_redis key to store fingerprints
 
         """
         self.server = server

@@ -85,7 +85,7 @@ class WeiboSearchSpider(CrawlSpider):
         validHtmlDoc = parsePage.getContent(response.body)
         if validHtmlDoc == None:
             return
-
+        # TODO: 如果未找到相关微博结果须过滤。。。
         soup = BeautifulSoup(validHtmlDoc)
         pageNode = soup.find('div', attrs={"node-type": "feed_list_page_morelist"})
         searchPage = SearchPage.wrap(pageNode)

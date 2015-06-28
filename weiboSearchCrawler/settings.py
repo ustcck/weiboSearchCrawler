@@ -11,7 +11,7 @@ BOT_NAME = 'weiboSearchCrawler'
 SPIDER_MODULES = ['weiboSearchCrawler.spiders']
 NEWSPIDER_MODULE = 'weiboSearchCrawler.spiders'
 
-# scrapy-redis config
+# scrapy_redis config
 REDIS_CONFIG = {
     'host': '10.13.91.251',
     'port': 6379,
@@ -33,11 +33,11 @@ MONGO_CONFIG = {
     'port': 27017,
 }
 
-# Don't cleanup scrapy-redis queues, allows to pause/resume crawls.
+# Don't cleanup scrapy_redis queues, allows to pause/resume crawls.
 SCHEDULER_PERSIST = False
 QUEUE_KEY = '%(spider)s:requests'
 DUPEFILTER_KEY = '%(spider)s:dupefilter'
-SCHEDULER = "weiboSearchCrawler.scrapy-redis.scheduler.Scheduler"
+SCHEDULER = "weiboSearchCrawler.scrapy_redis.scheduler.Scheduler"
 
 # pipelines config
 ITEM_PIPELINES = {
@@ -49,7 +49,7 @@ LOG_LEVEL = 'INFO'
 TIME_DELTA = 30
 
 # read keywords from 'file' or 'db'
-BOOTSTRAP = 'db'
+BOOTSTRAP = 'file'
 
 # how many feeds can fetch from a item
 FEED_LIMIT = 300000

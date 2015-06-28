@@ -5,7 +5,7 @@ from scrapy.utils.serialize import ScrapyJSONEncoder
 
 
 class RedisPipeline(object):
-    """Pushes serialized item into a scrapy-redis list/queue"""
+    """Pushes serialized item into a scrapy_redis list/queue"""
 
     def __init__(self, host, port):
         self.server = redis.Redis(host, port)
@@ -27,6 +27,6 @@ class RedisPipeline(object):
         return item
 
     def item_key(self, item, spider):
-        """Returns scrapy-redis key based on given spider"""
+        """Returns scrapy_redis key based on given spider"""
         return "%s:items" % spider.name
 
