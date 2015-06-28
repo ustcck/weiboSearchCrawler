@@ -5,7 +5,7 @@
 from scrapy.conf import settings
 import pymongo
 
-from weibosearch.sina.feeds import Feed
+from weiboSearchCrawler.sina.feeds import Feed
 
 
 class MongoDBPipeline(object):

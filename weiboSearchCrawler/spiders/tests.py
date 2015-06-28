@@ -5,7 +5,7 @@ from scrapy.http import Response
 from scrapy.http import Request
 
 from WeiboSearchSpider import WeiboSearchSpider
-from weibosearch import pipelines
+from weiboSearchCrawler import pipelines
 
 class WeiboSearchSpiderTest(unittest.TestCase):
 

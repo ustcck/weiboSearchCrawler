@@ -1,7 +1,5 @@
-#coding=utf-8
-# weibosearch spider
-# tpeng <pengtaoo@gmail.com>
-#
+# -*- coding=utf-8 -*-
+
 from datetime import datetime
 import urllib
 import re
@@ -15,17 +13,17 @@ from scrapy.utils.reqser import request_to_dict
 from lxml.html import tostring
 from bs4 import BeautifulSoup
 
-from weibosearch.sina.feeds import SearchPage
-from weibosearch.items import ScrapyWeiboItem
-from weibosearch.sina.query import QueryFactory
-from weibosearch.sina import weiboLogin
-from weibosearch.sina import _epoch
-from weibosearch.db import readKeywords
-from weibosearch.sina import parsePage
+from weiboSearchCrawler.sina.feeds import SearchPage
+from weiboSearchCrawler.items import ScrapyWeiboItem
+from weiboSearchCrawler.sina.query import QueryFactory
+from weiboSearchCrawler.sina import weiboLogin
+from weiboSearchCrawler.sina import _epoch
+from weiboSearchCrawler.db import readKeywords
+from weiboSearchCrawler.sina import parsePage
 
 
 class WeiboSearchSpider(CrawlSpider):
-    name = 'weibosearch'
+    name = 'weiboSpider'
     allowed_domains = ['weibo.com']
     username = 'echobfy@163.com'
     password = 'udms1234'

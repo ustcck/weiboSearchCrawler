@@ -1,6 +1,6 @@
 import redis
-from weibosearch.redis.queue import SpiderQueue
-from weibosearch.redis.dupefilter import RFPDupeFilter
+from weiboSearchCrawler.redis.queue import SpiderQueue
+from weiboSearchCrawler.redis.dupefilter import RFPDupeFilter
 
 # default values
 REDIS_CONFIG = {

@@ -6,10 +6,10 @@
 #     http://doc.scrapy.org/topics/settings.html
 #
 
-BOT_NAME = 'weibosearch'
+BOT_NAME = 'weiboSearchCrawler'
 
-SPIDER_MODULES = ['weibosearch.spiders']
-NEWSPIDER_MODULE = 'weibosearch.spiders'
+SPIDER_MODULES = ['weiboSearchCrawler.spiders']
+NEWSPIDER_MODULE = 'weiboSearchCrawler.spiders'
 
 # scrapy-redis config
 REDIS_CONFIG = {
@@ -37,11 +37,11 @@ MONGO_CONFIG = {
 SCHEDULER_PERSIST = False
 QUEUE_KEY = '%(spider)s:requests'
 DUPEFILTER_KEY = '%(spider)s:dupefilter'
-SCHEDULER = "weibosearch.scrapy-redis.scheduler.Scheduler"
+SCHEDULER = "weiboSearchCrawler.scrapy-redis.scheduler.Scheduler"
 
 # pipelines config
 ITEM_PIPELINES = {
-    'weibosearch.pipelines.MongoDBPipeline': 50,
+    'weiboSearchCrawler.pipelines.MongoDBPipeline': 50,
 }
 
 DOWNLOAD_DELAY = 10
