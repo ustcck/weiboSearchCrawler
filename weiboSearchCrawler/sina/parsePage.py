@@ -13,3 +13,9 @@ def getContent(html):
         return content
 
     return None
+
+# if search is no result, then return True.
+def isThereResult(soup):
+    if soup.find('div', class_="pl_noresult"):
+        return False
+    return True

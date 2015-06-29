@@ -85,20 +85,24 @@ class WeiboSearchSpider(CrawlSpider):
         validHtmlDoc = parsePage.getContent(response.body)
         if validHtmlDoc == None:
             return
-        # TODO: 如果未找到相关微博结果须过滤。。。
         soup = BeautifulSoup(validHtmlDoc)
+
+        # there is no weibo about this topic in the timerange.
+        if not parsePage.isThereResult(soup): return
+
         pageNode = soup.find('div', attrs={"node-type": "feed_list_page_morelist"})
         searchPage = SearchPage.wrap(pageNode)
 
-        # parse the first page and then parse the next pages.
-        request = Request(url=response.url, callback=self.parse_page,
-                          meta={'keyword': keyword,}, dont_filter=True)
-        yield request
+        # request for more pages and parse the first page.
         for i in range(len(searchPage)):
             url = searchPage[i]
             request = Request(url=url, callback=self.parse_page)
             request.meta['keyword'] = keyword
             yield request
+
+        for item in self.parse_page(response):
+            yield item
+
 
     # parse single weibo page
     def parse_page(self, response):

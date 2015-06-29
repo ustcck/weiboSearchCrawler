@@ -46,10 +46,6 @@ ITEM_PIPELINES = {
 
 DOWNLOAD_DELAY = 10
 LOG_LEVEL = 'INFO'
-TIME_DELTA = 30
 
 # read keywords from 'file' or 'db'
 BOOTSTRAP = 'file'
-
-# how many feeds can fetch from a item
-FEED_LIMIT = 300000
