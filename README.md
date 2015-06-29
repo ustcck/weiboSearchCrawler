@@ -21,3 +21,5 @@ A distributed Sina Weibo Search spider based on Scrapy, Redis and MongoDB. And f
 3. you can test the process of parsing locally, see weibosearch/spiders/tests.py for more
 3. add another spider with *scrapy crawl weibosearch -a username=another_weibo_account -a password=another_weibo_password*
 
+=======
+# weiboSearchCrawler

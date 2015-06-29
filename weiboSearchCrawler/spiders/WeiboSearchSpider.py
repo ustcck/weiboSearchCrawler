@@ -4,8 +4,8 @@ from datetime import datetime
 import urllib
 import re
 import json
+import logging
 
-from scrapy import log
 from scrapy.conf import settings
 from scrapy.http import Request
 from scrapy.spiders import CrawlSpider
@@ -29,13 +29,16 @@ class WeiboSearchSpider(CrawlSpider):
     password = 'udms1234'
     cookieFile = 'weibo_login_cookies'
     saveIntoDB = 'True'
+    logger = logging.getLogger('weibo')
 
     def __init__(self, name=None, login=True, saveIntoDB=True, **kwargs):
         super(WeiboSearchSpider, self).__init__(name, **kwargs)
         self.logined = False
         self.saveIntoDB = saveIntoDB
 
-        self.log('login with %s' % self.username)
+        self.logger.info(' ---> [%-30s] try to login in weibo with username(%s)......'
+                         % ('', self.username))
+
         if login:
             login_url = weiboLogin.login(self.username, self.password, self.cookieFile)
             if login_url:
@@ -49,10 +52,11 @@ class WeiboSearchSpider(CrawlSpider):
 
         assert result == True
         if result:
+            self.logger.info(' ---> [%-30s] login in weibo successfully......' % '')
             self.logined = True
 
             bootstrap = settings.get('BOOTSTRAP')
-            log.msg('bootstrap from %s' % bootstrap, level=log.INFO)
+            self.logger.info(' ---> [%-30s] read keywords from %s......' % ('', bootstrap))
             # FIXME: use last scheduled time instead of today, otherwise queue filter will not work
             today = datetime.now()
 
@@ -67,7 +71,10 @@ class WeiboSearchSpider(CrawlSpider):
             for keyword in keywords:
                 start = _epoch()
                 url = QueryFactory.create_timerange_query(urllib.quote(keyword.encode('utf8')), start, today)
-                print url
+
+                self.logger.debug(' ---> [%-30s](%s-%s) send the keyword query to server...' %
+                                  (keyword, '', ''))
+
                 request = Request(url=url, callback=self.parse_weibo, meta={
                     'keyword': keyword,
                     'start': start.strftime("%Y-%m-%d %H:%M:%S"),
@@ -75,7 +82,8 @@ class WeiboSearchSpider(CrawlSpider):
                     'last_fetched': today.strftime("%Y-%m-%d %H:%M:%S")})
                 yield request
         else:
-            self.log('login failed: errno=%s, reason=%s' % (''), (''))
+            self.logger.error(' ---> [%-30s] login failed: errno=%s, reason=%s @@@@@@'
+                              % (feedbackJson.get('errno', ''), feedbackJson.get('reason', '')))
 
     def parse_weibo(self, response):
         keyword = response.meta['keyword']
@@ -84,11 +92,17 @@ class WeiboSearchSpider(CrawlSpider):
         #open_in_browser(response)
         validHtmlDoc = parsePage.getContent(response.body)
         if validHtmlDoc == None:
+            self.logger.warning(' ---> [%-30s] can not find the feed list, maybe structure of weibo if change'
+                                % (keyword))
+            # TODO: 当出现validHtmlDoc为空的时候说明weibo结构发生了改变，或者该账号被封了。应记录下该response
             return
+
         soup = BeautifulSoup(validHtmlDoc)
 
         # there is no weibo about this topic in the timerange.
-        if not parsePage.isThereResult(soup): return
+        if not parsePage.isThereResult(soup):
+            self.logger.warning()
+            return
 
         pageNode = soup.find('div', attrs={"node-type": "feed_list_page_morelist"})
         searchPage = SearchPage.wrap(pageNode)
