@@ -60,13 +60,8 @@ class WeiboSearchSpider(CrawlSpider):
             # FIXME: use last scheduled time instead of today, otherwise queue filter will not work
             today = datetime.now()
 
-            # you can read keywords to crawl from file or mysql, from file just for test
-            if bootstrap == 'file':
-                keywords = readKeywords.readKeywordsFromFile()
-            else:
-                keywords = readKeywords.readKeywordsFromMysql()
+            keywords = readKeywords.readKeywords()
             # TODO: 对于一段时间区间进行爬虫。。。。
-
 
             for keyword in keywords:
                 start = _epoch()

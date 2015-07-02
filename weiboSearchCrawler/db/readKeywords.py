@@ -31,3 +31,15 @@ def readKeywordsFromFile():
         keywords.append(line)
 
     return keywords
+
+
+# you can read keywords to crawl from file or mysql, from file just for test
+def readKeywords():
+    keywords = []
+
+    bootstrap = settings.get('BOOTSTRAP', 'file')
+    if bootstrap == 'file':
+        keywords = readKeywordsFromFile()
+    else:
+        keywords = readKeywordsFromMysql()
+    return keywords
