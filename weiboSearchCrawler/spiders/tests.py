@@ -36,6 +36,16 @@ class WeiboSearchSpiderTest(unittest.TestCase):
             pass
         self.assertEqual(True, True)
 
+    def test_parse(self):
+        response = Response(url='', body='parent.sinaSSOController.'
+                                         'feedBackUrlCallBack({"result":true,"userinfo":'
+                                         '{"uniqueid":"5341604164","userid":null,"displayname":'
+                                         'null,"userdomain":"?wvr=5&lf=reg"}})')
+        generator = self.spider.parse(response)
+
+        for obj in generator:
+            print obj
+
 
 
 if __name__ == '__main__':

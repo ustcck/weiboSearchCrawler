@@ -1,6 +1,7 @@
 # -*- coding=utf-8 -*-
 
 from datetime import datetime
+from datetime import timedelta
 import urllib
 import re
 import json
@@ -9,6 +10,7 @@ import logging
 from scrapy.conf import settings
 from scrapy.http import Request
 from scrapy.spiders import CrawlSpider
+from scrapy.utils.response import open_in_browser
 from scrapy.utils.reqser import request_to_dict
 from lxml.html import tostring
 from bs4 import BeautifulSoup
@@ -17,8 +19,8 @@ from weiboSearchCrawler.sina.feeds import SearchPage
 from weiboSearchCrawler.items import ScrapyWeiboItem
 from weiboSearchCrawler.sina.query import QueryFactory
 from weiboSearchCrawler.sina import weiboLogin
-from weiboSearchCrawler.sina import _epoch
-from weiboSearchCrawler.db import readKeywords
+from weiboSearchCrawler.utils import readKeywords
+from weiboSearchCrawler.utils import readFetchTimeRange
 from weiboSearchCrawler.sina import parsePage
 
 
@@ -57,25 +59,25 @@ class WeiboSearchSpider(CrawlSpider):
 
             bootstrap = settings.get('BOOTSTRAP')
             self.logger.info(' ---> [%-30s] read keywords from %s......' % ('', bootstrap))
-            # FIXME: use last scheduled time instead of today, otherwise queue filter will not work
-            today = datetime.now()
 
             keywords = readKeywords.readKeywords()
-            # TODO: 对于一段时间区间进行爬虫。。。。
+            start, end = readFetchTimeRange.readTimeRange()
 
-            for keyword in keywords:
-                start = _epoch()
-                url = QueryFactory.create_timerange_query(urllib.quote(keyword.encode('utf8')), start, today)
+            while start < end:
 
-                self.logger.debug(' ---> [%-30s](%s-%s) send the keyword query to server...' %
-                                  (keyword, '', ''))
+                for keyword in keywords:
 
-                request = Request(url=url, callback=self.parse_weibo, meta={
-                    'keyword': keyword,
-                    'start': start.strftime("%Y-%m-%d %H:%M:%S"),
-                    'end': today.strftime("%Y-%m-%d %H:%M:%S"),
-                    'last_fetched': today.strftime("%Y-%m-%d %H:%M:%S")})
-                yield request
+                    url = QueryFactory.create_timerange_query(urllib.quote(keyword.encode('utf8')), start, start)
+
+                    self.logger.debug(' ---> [%-30s](%s-%s) send the keyword query to server...' %
+                                  (keyword, start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d")))
+
+                    request = Request(url=url, callback=self.parse_weibo, meta={
+                        'keyword': keyword,
+                        'start': start.strftime("%Y-%m-%d %H:%M:%S"),
+                        'end': start.strftime("%Y-%m-%d %H:%M:%S"),})
+                    yield request
+                start += timedelta(days=1)
         else:
             self.logger.error(' ---> [%-30s] login failed: errno=%s, reason=%s @@@@@@'
                               % (feedbackJson.get('errno', ''), feedbackJson.get('reason', '')))
@@ -85,6 +87,7 @@ class WeiboSearchSpider(CrawlSpider):
         start = datetime.strptime(response.meta['start'], "%Y-%m-%d %H:%M:%S")
         end = datetime.strptime(response.meta['end'], "%Y-%m-%d %H:%M:%S")
         #open_in_browser(response)
+
         validHtmlDoc = parsePage.getContent(response.body)
         if validHtmlDoc == None:
             self.logger.warning(' ---> [%-30s] can not find the feed list, maybe structure of weibo if change'
