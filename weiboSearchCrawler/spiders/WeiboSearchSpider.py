@@ -113,6 +113,8 @@ class WeiboSearchSpider(CrawlSpider):
             request = Request(url=url, callback=self.parse_page)
             request.meta['keyword'] = keyword
             request.meta['keywordId'] = keywordId
+            request.meta['start'] = start
+            request.meta['end'] = end
             yield request
 
         for item in self.parse_page(response):
@@ -133,6 +135,7 @@ class WeiboSearchSpider(CrawlSpider):
             item['html'] = str(person)
             item['keyword'] = response.meta['keyword']
             item['keywordId'] = response.meta['keywordId']
+            item['downDate'] = response.meta['start']
             yield item
 
 
