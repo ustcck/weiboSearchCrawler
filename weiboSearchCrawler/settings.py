@@ -41,17 +41,18 @@ SCHEDULER = "weiboSearchCrawler.scrapy_redis.scheduler.Scheduler"
 
 # pipelines config
 ITEM_PIPELINES = {
-    'weiboSearchCrawler.pipelines.MongoDBPipeline': 50,
+    #'weiboSearchCrawler.pipelines.MongoDBPipeline': 50,
+    'weiboSearchCrawler.pipelines.JsonPipeline': 30
 }
 
 DOWNLOAD_DELAY = 10
 LOG_LEVEL = 'INFO'
 
-# read keywords from 'file' or 'utils'
+# read keywords from 'file' or 'mysql'
 BOOTSTRAP = 'file'
 
 # fetch time range HISTORY or YESTERDAY
 FREQUENCY = 'YESTERDAY'
 # the range is in [FETCH_START, FETCH_END)
 FETCH_START = '2015-06-01'
-FETCH_END = '2015-06-25'
+FETCH_END = '2015-06-02'

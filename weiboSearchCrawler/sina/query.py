@@ -19,7 +19,7 @@ class QueryFactory:
   def create_singer_query(query, start, end):
     s = start.strftime('%Y-%m-%d')
     e = end.strftime('%Y-%m-%d')
-    return 'http://s.weibo.com/weibo/%s&Refer=g&timescope=custom:%s-0:%s-23&xsort=hot' \
+    return 'http://s.weibo.com/weibo/%s&Refer=STopic_hotTopic&timescope=custom:%s-0:%s-23&xsort=hot' \
            % (query, s, e)
 
 

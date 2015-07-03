@@ -164,6 +164,14 @@ class Pictures():
             rootNode.appendChild(pNode)
         return doc.toprettyxml(indent='\t', newl='\n', encoding='utf-8')
 
+    @staticmethod # get the first url of pictureXML
+    def parseXML(xml):
+        doc = Dom.parseString(xml)
+        root = doc.documentElement
+        firstImg = root.getElementsByTagName('img1')
+        if not firstImg: return None
+        return firstImg[0].getAttribute('url')
+
     def __str__(self):
         return 'Picture(numberOfPicture=%d)' % len(self.pictureList)
 

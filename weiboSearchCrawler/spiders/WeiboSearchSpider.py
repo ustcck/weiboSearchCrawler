@@ -60,13 +60,16 @@ class WeiboSearchSpider(CrawlSpider):
             bootstrap = settings.get('BOOTSTRAP')
             self.logger.info(' ---> [%-30s] read keywords from %s......' % ('', bootstrap))
 
-            keywords = readKeywords.readKeywords()
+            #keywords = readKeywords.readKeywords()
+            keywords = readKeywords.readKeywordsFromSinglersFile()
             start, end = readFetchTimeRange.readTimeRange()
 
             while start < end:
 
                 for keyword in keywords:
-                    url = QueryFactory.create_timerange_query(urllib.quote(keyword.encode('utf8')),
+                    #url = QueryFactory.create_timerange_query(urllib.quote(keyword.encode('utf8')),
+                                                              #start, start)
+                    url = QueryFactory.create_singer_query(urllib.quote(keyword.encode('utf8')),
                                                               start, start)
 
                     self.logger.debug(' ---> [%-30s](%s-%s) send the keyword query to server...' %
@@ -95,13 +98,15 @@ class WeiboSearchSpider(CrawlSpider):
             self.logger.warning(' ---> [%-30s] can not find the feed list, maybe structure of weibo if change'
                                 % (keyword))
             # TODO: 当出现validHtmlDoc为空的时候说明weibo结构发生了改变，或者该账号被封了。应记录下该response
+            open_in_browser(response)
             return
 
         soup = BeautifulSoup(validHtmlDoc)
 
         # there is no weibo about this topic in the timerange.
         if not parsePage.isThereResult(soup):
-            self.logger.warning()
+            self.logger.warning(' ---> [%-30s] there is not weibo about this topic in the timerange~~~~~'
+                                % (keyword))
             return
 
         pageNode = soup.find('div', attrs={"node-type": "feed_list_page_morelist"})

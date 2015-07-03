@@ -34,6 +34,19 @@ def readKeywordsFromFile():
     return keywords
 
 
+def readKeywordsFromSinglersFile():
+    keywords = {}
+
+    n = 0;
+    lines = tuple(codecs.open('../singer_utf8.txt', 'r', 'utf-8'))
+    for line in lines:
+        if n != 0:
+            keywords[line.split(",")[1].strip().replace("'", r"\'").replace('"', "")] = \
+                line.split(",")[0].replace('"', "")
+        n = n + 1
+
+    return keywords
+
 # you can read keywords to crawl from file or mysql, from file just for test
 def readKeywords():
     keywords = []
