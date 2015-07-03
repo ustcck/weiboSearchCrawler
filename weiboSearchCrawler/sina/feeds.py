@@ -101,6 +101,32 @@ class Forward():
     def __str__(self):
         return 'Forward(weiboId=%s, userName=%s)' % (self.weiboId, self.userName)
 
+# feed_from info
+class FeedFrom():
+    def __init__(self, timestamp, source):
+        self.timestamp = timestamp
+        self.source = source
+
+    @staticmethod
+    def wrap(html):
+        soup = BeautifulSoup(html)
+
+        timeAndSourceNode = soup.find_all('a')
+        time = timeAndSourceNode[0]['date']
+        timestamp = datetime.fromtimestamp(long(time) / 1000)
+        source = timeAndSourceNode[1].get_text()
+
+        return FeedFrom(timestamp, source)
+
+    def format(self):
+        dictOfFeedFrom = {}
+        dictOfFeedFrom['pubDate'] = self.timestamp
+        dictOfFeedFrom['source'] = self.source
+        return dictOfFeedFrom
+
+    def __str__(self):
+        return 'FeedFrom(pubDate=%s, source=%s)' % (self.timestamp, self.source)
+
 
 class Pictures():
     def __init__(self, pictureList):
@@ -144,7 +170,8 @@ class Pictures():
 
 class Feed():
 
-    def __init__(self, weiboId, author, forwardList, content, picturesXML, retweets, replies, timestamp):
+    def __init__(self, weiboId, author, forwardList, content,
+                 picturesXML, retweets, replies, feedFrom):
         self.weiboId = weiboId
         self.author = author
         self.forwardList = forwardList
@@ -152,7 +179,7 @@ class Feed():
         self.picturesXML = picturesXML
         self.retweets = retweets
         self.replies = replies
-        self.timestamp = timestamp
+        self.feedFrom = feedFrom
 
     @staticmethod
     def wrap(html):
@@ -176,9 +203,9 @@ class Feed():
         if repliesMatch:
             replies = int(repliesMatch.group(1))
 
-        # get the time of this weibo
-        time = soup.find('div', class_="feed_from W_textb").find('a')['date']
-        timestamp = datetime.fromtimestamp(long(time) / 1000)
+        # get the time and the source of weibo
+        feedFromNode = soup.find('div', class_="feed_from W_textb")
+        feedFrom = FeedFrom.wrap(str(feedFromNode))
 
         # get the forwards
         forwardsNode = soup.find('div', attrs={"node-type": "feed_merge_lists"})
@@ -195,10 +222,11 @@ class Feed():
                 pictureList.append(Pictures.wrap(str(media)))
         picturesXML = Pictures.formatXML(pictureList)
 
-        return Feed(weiboId, author, forwardList, content, picturesXML, retweets, replies, timestamp)
+        return Feed(weiboId, author, forwardList, content, picturesXML, retweets, replies, feedFrom)
 
     def __str__(self):
-        return 'Feed(weiboId=%s, replies=%s, retweets=%s, timestamp=%s, ' \
+        return 'Feed(weiboId=%s, replies=%s, retweets=%s, feedFrom=%s, ' \
                     'author=%s, forwardList=%s, content=%s, picturesXML=%s)' \
-               % (self.weiboId, self.replies, self.retweets, self.timestamp,
-                  self.author, ' '.join(str(f) for f in self.forwardList), self.content, self.picturesXML)
+               % (self.weiboId, self.replies, self.retweets, self.feedFrom,
+                  self.author, ' '.join(str(f) for f in self.forwardList),
+                  self.content, self.picturesXML)

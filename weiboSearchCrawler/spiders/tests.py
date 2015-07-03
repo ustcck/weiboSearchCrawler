@@ -18,6 +18,7 @@ class WeiboSearchSpiderTest(unittest.TestCase):
 
     def test_parse_weibo(self):
         request = Request(url='http://pat.zju.edu.cn',meta={'keyword': 'scrapy',
+                                        'keywordId': 1,
                                         'start': '2015-06-27 11:00:00',
                                         'end': '2015-06-27 11:00:00',})
         generator = self.spider.parse_weibo(response=Response(url='', body=self.body, request=request))
@@ -29,6 +30,7 @@ class WeiboSearchSpiderTest(unittest.TestCase):
 
     def test_parse_page(self):
         request = Request(url='http://pat.zju.edu.cn',meta={'keyword': 'scrapy',
+                                        'keywordId': 1,
                                         'start': '2015-06-27 11:00:00',
                                         'end': '2015-06-27 11:00:00',})
         generator = self.spider.parse_page(response=Response(url='', body=self.body, request=request))

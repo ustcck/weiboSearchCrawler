@@ -33,7 +33,7 @@ class MongoDBPipeline(object):
             "content": feed.content,
             "retweets": feed.retweets,
             "replies": feed.replies,
-            "pubDate": feed.timestamp,
+            "feedFrom": feed.feedFrom.format(),
             "pictureXML": feed.picturesXML,
         }
         if spider.saveIntoDB:
