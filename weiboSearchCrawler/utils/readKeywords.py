@@ -25,7 +25,7 @@ def readKeywordsFromMysql():
 def readKeywordsFromFile():
     keywords = []
 
-    lines = tuple(codecs.open('items.txt', 'r', 'utf-8'))
+    lines = tuple(codecs.open('../../items.txt', 'r', 'utf-8'))
     for line in lines:
         if line.startswith("#"): continue
         keywords.append(line)

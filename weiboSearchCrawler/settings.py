@@ -47,5 +47,11 @@ ITEM_PIPELINES = {
 DOWNLOAD_DELAY = 10
 LOG_LEVEL = 'INFO'
 
-# read keywords from 'file' or 'db'
+# read keywords from 'file' or 'utils'
 BOOTSTRAP = 'file'
+
+# fetch time range HISTORY or YESTERDAY
+FREQUENCY = 'YESTERDAY'
+# the range is in [FETCH_START, FETCH_END)
+FETCH_START = '2015-06-01'
+FETCH_END = '2015-06-25'
