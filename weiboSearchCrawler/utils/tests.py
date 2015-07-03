@@ -16,6 +16,10 @@ class ReadKeywordsTest(unittest.TestCase):
         keywords = readKeywordsFromMysql()
         print keywords
 
+    def test_read_keywords_from_file(self):
+        keywords = readKeywordsFromFile()
+        print keywords
+
 
 if __name__ == '__main__':
     unittest.main()

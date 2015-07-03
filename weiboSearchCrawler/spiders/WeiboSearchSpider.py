@@ -66,14 +66,15 @@ class WeiboSearchSpider(CrawlSpider):
             while start < end:
 
                 for keyword in keywords:
-
-                    url = QueryFactory.create_timerange_query(urllib.quote(keyword.encode('utf8')), start, start)
+                    url = QueryFactory.create_timerange_query(urllib.quote(keyword.encode('utf8')),
+                                                              start, start)
 
                     self.logger.debug(' ---> [%-30s](%s-%s) send the keyword query to server...' %
                                   (keyword, start.strftime("%Y-%m-%d"), end.strftime("%Y-%m-%d")))
 
                     request = Request(url=url, callback=self.parse_weibo, meta={
                         'keyword': keyword,
+                        'keywordId': keywords[keyword],
                         'start': start.strftime("%Y-%m-%d %H:%M:%S"),
                         'end': start.strftime("%Y-%m-%d %H:%M:%S"),})
                     yield request
@@ -84,6 +85,7 @@ class WeiboSearchSpider(CrawlSpider):
 
     def parse_weibo(self, response):
         keyword = response.meta['keyword']
+        keywordId = response.meta['keywordId']
         start = datetime.strptime(response.meta['start'], "%Y-%m-%d %H:%M:%S")
         end = datetime.strptime(response.meta['end'], "%Y-%m-%d %H:%M:%S")
         #open_in_browser(response)
@@ -110,6 +112,7 @@ class WeiboSearchSpider(CrawlSpider):
             url = searchPage[i]
             request = Request(url=url, callback=self.parse_page)
             request.meta['keyword'] = keyword
+            request.meta['keywordId'] = keywordId
             yield request
 
         for item in self.parse_page(response):
@@ -129,6 +132,7 @@ class WeiboSearchSpider(CrawlSpider):
             item = ScrapyWeiboItem()
             item['html'] = str(person)
             item['keyword'] = response.meta['keyword']
+            item['keywordId'] = response.meta['keywordId']
             yield item
 
 

@@ -8,4 +8,5 @@ from scrapy.item import Item, Field
 class ScrapyWeiboItem(Item):
     html = Field()
     keyword = Field()
+    keywordId = Field()
 

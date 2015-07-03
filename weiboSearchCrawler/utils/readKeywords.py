@@ -8,7 +8,7 @@ def readKeywordsFromMysql():
     cnx = MySQLdb.connect(**settings.get('MYSQL_CONFIG'))
     cursor = cnx.cursor()
     cursor.execute('select * from topic')
-    keywords = []
+    keywords = {}
 
     for item in cursor:
         if item[2] == None or item[2] == '': continue
@@ -16,19 +16,20 @@ def readKeywordsFromMysql():
         words = item[2].split(' ')
         for word in words:
             if word != '':
-                keywords.append(word)
+                keywords[word] = int(item[0])
     cnx.close()
 
     return keywords
 
 
 def readKeywordsFromFile():
-    keywords = []
+    keywords = {}
 
     lines = tuple(codecs.open('../../items.txt', 'r', 'utf-8'))
     for line in lines:
         if line.startswith("#"): continue
-        keywords.append(line)
+        idAndKeyword = line.split(' ')
+        keywords[idAndKeyword[1]] = int(idAndKeyword[0])
 
     return keywords
 

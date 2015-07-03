@@ -26,6 +26,7 @@ class MongoDBPipeline(object):
 
         doc = {
             "keyword": item['keyword'],
+            "keywordId": item['keywordId'],
             "weibo_id": feed.weiboId,
             "author": feed.author.format(),
             "forward": [forward.format() for forward in feed.forwardList],
